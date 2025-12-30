@@ -7,7 +7,7 @@ const CONFIG = {
     phoneNumber: '(888) 524-0250',
     phoneLink: 'tel:+18885240250',
     popupDelay: 3000,
-    popupRecurDelay: 30000,
+    popupRecurDelay: 5000,
     particleCount: 50
 };
 

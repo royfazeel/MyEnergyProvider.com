@@ -1372,6 +1372,14 @@ body {
     color: var(--text-dim);
 }
 
+.mega-popup-disclaimer {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
 /* ============================================
    Scroll Animations
    ============================================ */

@@ -1,351 +1,367 @@
-// ========================================
-// MyEnergyProvider - Main JavaScript
-// ========================================
+/* ============================================
+   MyEnergyProvider.com - Main JavaScript
+   ============================================ */
 
+// Constants
+const PHONE_NUMBER = '(888) 525-0250';
+const PHONE_LINK = 'tel:8885250250';
+const EMAIL = 'support@myenergyprovider.com';
+const POPUP_REAPPEAR_DELAY = 3000; // 3 seconds
+
+// Provider Data
+const providerData = {
+    'duke-energy': { 
+        color: '#00629B', 
+        title: 'Pay Duke Energy Bill', 
+        message: 'Duke Energy customers – pay now!',
+        name: 'Duke Energy'
+    },
+    'southern-company': { 
+        color: '#CC092F', 
+        title: 'Pay Southern Company Bill', 
+        message: 'Southern Company customers – pay now!',
+        name: 'Southern Company'
+    },
+    'dominion-energy': { 
+        color: '#1C4EA3', 
+        title: 'Pay Dominion Energy Bill', 
+        message: 'Dominion Energy customers – pay now!',
+        name: 'Dominion Energy'
+    },
+    'exelon': { 
+        color: '#00274C', 
+        title: 'Pay Exelon Bill', 
+        message: 'ComEd, PECO, BGE customers – pay now!',
+        name: 'Exelon'
+    },
+    'nextera-energy': { 
+        color: '#6EB43F', 
+        title: 'Pay NextEra Energy Bill', 
+        message: 'Florida Power & Light customers – pay now!',
+        name: 'NextEra Energy'
+    },
+    'aep': { 
+        color: '#E31937', 
+        title: 'Pay AEP Bill', 
+        message: 'American Electric Power customers – pay now!',
+        name: 'American Electric Power'
+    },
+    'xcel-energy': { 
+        color: '#005776', 
+        title: 'Pay Xcel Energy Bill', 
+        message: 'Xcel Energy customers – pay now!',
+        name: 'Xcel Energy'
+    },
+    'entergy': { 
+        color: '#003DA5', 
+        title: 'Pay Entergy Bill', 
+        message: 'Entergy customers – pay now!',
+        name: 'Entergy'
+    },
+    'pge': { 
+        color: '#006BA6', 
+        title: 'Pay PG&E Bill', 
+        message: 'Pacific Gas & Electric customers – pay now!',
+        name: 'Pacific Gas & Electric'
+    },
+    'con-edison': { 
+        color: '#00A9CE', 
+        title: 'Pay Con Edison Bill', 
+        message: 'New York City customers – pay now!',
+        name: 'Con Edison'
+    }
+};
+
+// State
+let popupTimeout = null;
+let currentProvider = null;
+let isPopupOpen = false;
+
+// ============================================
+// Initialization
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components
-    initModal();
-    initHeader();
-    initMobileMenu();
-    initAnimations();
     initParticles();
-    initCounters();
+    initNavbar();
+    initMobileNav();
     initFAQ();
+    initPopup();
+    detectProviderPage();
+    setActiveNavLink();
 });
 
-// ========================================
-// Modal Functionality
-// ========================================
-function initModal() {
-    const modal = document.getElementById('callModal');
-    const modalClose = document.getElementById('modalClose');
-    
-    if (!modal) return;
-    
-    // Show modal after 2 seconds
-    setTimeout(() => {
-        openModal();
-    }, 2000);
-    
-    // Close modal on button click
-    if (modalClose) {
-        modalClose.addEventListener('click', closeModal);
-    }
-    
-    // Close modal on overlay click
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // Close modal on ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-function openModal() {
-    const modal = document.getElementById('callModal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closeModal() {
-    const modal = document.getElementById('callModal');
-    if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        
-        // Show modal again on next page visit (stored in session)
-        sessionStorage.setItem('modalShown', 'true');
-    }
-}
-
-// ========================================
-// Header Scroll Effect
-// ========================================
-function initHeader() {
-    const header = document.getElementById('header');
-    if (!header) return;
-    
-    let lastScroll = 0;
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        
-        if (currentScroll > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-        
-        lastScroll = currentScroll;
-    });
-}
-
-// ========================================
-// Mobile Menu
-// ========================================
-function initMobileMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    const nav = document.getElementById('nav');
-    
-    if (!mobileMenu || !nav) return;
-    
-    mobileMenu.addEventListener('click', () => {
-        nav.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-    });
-    
-    // Close menu when clicking a link
-    const navLinks = nav.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            nav.classList.remove('active');
-            mobileMenu.classList.remove('active');
-        });
-    });
-}
-
-// ========================================
-// Scroll Animations
-// ========================================
-function initAnimations() {
-    const animatedElements = document.querySelectorAll('.animate-fade-in, .animate-slide-up, .animate-scale-in');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    animatedElements.forEach(el => {
-        el.style.animationPlayState = 'paused';
-        observer.observe(el);
-    });
-}
-
-// ========================================
-// Floating Particles
-// ========================================
+// ============================================
+// Particle System
+// ============================================
 function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
-    
-    const particleCount = 30;
+    const container = document.getElementById('particles');
+    if (!container) return;
+
+    const particleCount = window.innerWidth < 768 ? 15 : 30;
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
         particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-        particlesContainer.appendChild(particle);
+        particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+        container.appendChild(particle);
     }
 }
 
-// ========================================
-// Counter Animation
-// ========================================
-function initCounters() {
-    const counters = document.querySelectorAll('[data-count]');
+// ============================================
+// Navbar
+// ============================================
+function initNavbar() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+
+    let lastScroll = 0;
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                observer.unobserve(entry.target);
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+    }, { passive: true });
+}
+
+function setActiveNavLink() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav a');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && currentPath.includes(href.replace('.html', '').replace('/', ''))) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// ============================================
+// Mobile Navigation
+// ============================================
+function initMobileNav() {
+    // Close mobile nav when clicking on a link
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileNav();
+        });
+    });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', function(e) {
+        const mobileNav = document.getElementById('mobileNav');
+        const hamburger = document.querySelector('.hamburger');
+        
+        if (mobileNav && mobileNav.classList.contains('active')) {
+            if (!mobileNav.contains(e.target) && !hamburger.contains(e.target)) {
+                closeMobileNav();
+            }
+        }
+    });
+}
+
+function toggleMobileNav() {
+    const mobileNav = document.getElementById('mobileNav');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (mobileNav && hamburger) {
+        mobileNav.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+    }
+}
+
+function closeMobileNav() {
+    const mobileNav = document.getElementById('mobileNav');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (mobileNav && hamburger) {
+        mobileNav.classList.remove('active');
+        hamburger.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// ============================================
+// FAQ Accordion
+// ============================================
+function initFAQ() {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const item = this.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all other items
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
+            
+            // Toggle current item
+            if (!isActive) {
+                item.classList.add('active');
             }
         });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => observer.observe(counter));
+    });
 }
 
-function animateCounter(element) {
-    const target = parseInt(element.getAttribute('data-count'));
-    const duration = 2000;
-    const step = target / (duration / 16);
-    let current = 0;
-    
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current);
+// ============================================
+// Popup System
+// ============================================
+function initPopup() {
+    const overlay = document.getElementById('popupOverlay');
+    if (!overlay) return;
+
+    // Close popup when clicking overlay
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            closePopup();
         }
-    }, 16);
-}
+    });
 
-// ========================================
-// FAQ Accordion
-// ========================================
-function initFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        if (question) {
-            question.addEventListener('click', () => {
-                const isActive = item.classList.contains('active');
-                
-                // Close all other items
-                faqItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
-                
-                // Toggle current item
-                if (!isActive) {
-                    item.classList.add('active');
-                }
-            });
+    // Close popup with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isPopupOpen) {
+            closePopup();
         }
     });
 }
 
-// ========================================
-// Smooth Scroll for Anchor Links
-// ========================================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href !== '#') {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+function detectProviderPage() {
+    const path = window.location.pathname;
+    const providerKeys = Object.keys(providerData);
+    
+    for (const key of providerKeys) {
+        if (path.includes(key)) {
+            currentProvider = key;
+            // Show popup after 2 seconds
+            setTimeout(() => showProviderPopup(key), 2000);
+            break;
         }
-    });
-});
-
-// ========================================
-// Form Validation
-// ========================================
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const name = form.querySelector('[name="name"]').value.trim();
-        const email = form.querySelector('[name="email"]').value.trim();
-        const message = form.querySelector('[name="message"]').value.trim();
-        
-        if (!name || !email || !message) {
-            alert('Please fill in all required fields.');
-            return;
-        }
-        
-        if (!isValidEmail(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-        
-        // Show success message
-        alert('Thank you for your message! We will get back to you shortly.');
-        form.reset();
-    });
-}
-
-function isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
-
-// ========================================
-// Phone Number Click Tracking
-// ========================================
-document.querySelectorAll('a[href^="tel:"]').forEach(link => {
-    link.addEventListener('click', function() {
-        // Track phone call clicks (can be integrated with analytics)
-        console.log('Phone call initiated');
-    });
-});
-
-// ========================================
-// Loading Animation
-// ========================================
-window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-});
-
-// ========================================
-// Back to Top Button (if needed)
-// ========================================
-function initBackToTop() {
-    const backToTop = document.getElementById('backToTop');
-    if (!backToTop) return;
-    
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 500) {
-            backToTop.classList.add('visible');
-        } else {
-            backToTop.classList.remove('visible');
-        }
-    });
-    
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// ========================================
-// Typing Effect for Headlines (optional)
-// ========================================
-function initTypingEffect() {
-    const typingElements = document.querySelectorAll('.typing-effect');
-    
-    typingElements.forEach(element => {
-        const text = element.textContent;
-        element.textContent = '';
-        let i = 0;
-        
-        const type = () => {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, 50);
-            }
-        };
-        
-        type();
-    });
-}
-
-// ========================================
-// Provider Page Modal (Shows on new page visits)
-// ========================================
-function showProviderModal() {
-    // Check if this is a provider page and modal hasn't been shown this session
-    const isProviderPage = document.body.classList.contains('provider-page');
-    const modalShown = sessionStorage.getItem('providerModalShown');
-    
-    if (isProviderPage && !modalShown) {
-        setTimeout(() => {
-            openModal();
-            sessionStorage.setItem('providerModalShown', 'true');
-        }, 1500);
     }
 }
 
-// Call on page load
-showProviderModal();
+function showProviderPopup(provider) {
+    const data = providerData[provider];
+    if (!data) return;
+
+    const overlay = document.getElementById('popupOverlay');
+    const container = document.getElementById('popupContainer');
+    const title = document.getElementById('popupTitle');
+    const message = document.getElementById('popupMessage');
+    const phoneBtn = document.querySelector('.popup-phone');
+
+    if (!overlay || !container) return;
+
+    // Update popup content
+    container.style.setProperty('--popup-color', data.color);
+    if (title) title.textContent = data.title;
+    if (message) message.textContent = data.message;
+    if (phoneBtn) {
+        phoneBtn.style.background = `linear-gradient(135deg, ${data.color}, var(--accent-purple))`;
+    }
+
+    // Show popup
+    overlay.classList.add('active');
+    isPopupOpen = true;
+    document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+    const overlay = document.getElementById('popupOverlay');
+    if (!overlay) return;
+
+    overlay.classList.remove('active');
+    isPopupOpen = false;
+    document.body.style.overflow = '';
+
+    // Clear any existing timeout
+    if (popupTimeout) {
+        clearTimeout(popupTimeout);
+    }
+
+    // Set timeout to reshow popup after 3 seconds on provider pages
+    if (currentProvider) {
+        popupTimeout = setTimeout(() => {
+            if (currentProvider && !isPopupOpen) {
+                showProviderPopup(currentProvider);
+            }
+        }, POPUP_REAPPEAR_DELAY);
+    }
+}
+
+// ============================================
+// Utility Functions
+// ============================================
+function smoothScrollTo(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Throttle function for performance
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// Debounce function for performance
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// ============================================
+// Analytics Helper (placeholder)
+// ============================================
+function trackEvent(category, action, label) {
+    // Placeholder for analytics tracking
+    // Can be connected to Google Analytics, etc.
+    console.log('Event:', category, action, label);
+}
+
+// Track phone clicks
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href^="tel:"]');
+    if (link) {
+        trackEvent('Contact', 'Phone Click', link.href);
+    }
+});
+
+// Track email clicks
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href^="mailto:"]');
+    if (link) {
+        trackEvent('Contact', 'Email Click', link.href);
+    }
+});
+
+// ============================================
+// Expose functions globally
+// ============================================
+window.toggleMobileNav = toggleMobileNav;
+window.closePopup = closePopup;
+window.showProviderPopup = showProviderPopup;

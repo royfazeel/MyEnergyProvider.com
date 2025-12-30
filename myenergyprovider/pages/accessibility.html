@@ -411,7 +411,7 @@
         <p>We welcome your feedback on the accessibility of MyEnergyProvider. If you encounter accessibility barriers on our website or need assistance with our services, please contact us:</p>
         <ul>
             <li><strong>Phone:</strong> <a href="tel:+18885240250">(888) 524-0250</a></li>
-            <li><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#e18082828492928883888d889598a18c98848f8493869891938e9788858493cf828e8c"><span class="__cf_email__" data-cfemail="5b3a38383e282832393237322f221b36223e353e293c222b29342d323f3e2975383436">[email&#160;protected]</span></a></li>
+            <li><strong>Email:</strong> <a href="mailto:accessibility@myenergyprovider.com">accessibility@myenergyprovider.com</a></li>
             <li><strong>TTY/TDD:</strong> 711 (Telecommunications Relay Service)</li>
         </ul>
 
@@ -485,6 +485,14 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Mobile Menu Toggle
-        cons
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

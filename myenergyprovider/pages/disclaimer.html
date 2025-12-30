@@ -371,7 +371,7 @@
         <p>If you have any questions about this disclaimer, please contact us:</p>
         <ul>
             <li>Phone: <a href="tel:+18885240250">(888) 524-0250</a></li>
-            <li>Email: <a href="/cdn-cgi/l/email-protection#d3bfb6b4b2bf93beaab6bdb6a1b4aaa3a1bca5bab7b6a1fdb0bcbe"><span class="__cf_email__" data-cfemail="d9b5bcbeb8b599b4a0bcb7bcabbea0a9abb6afb0bdbcabf7bab6b4">[email&#160;protected]</span></a></li>
+            <li>Email: <a href="mailto:legal@myenergyprovider.com">legal@myenergyprovider.com</a></li>
         </ul>
     </section>
 
@@ -417,6 +417,14 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Mobile Menu Toggle
-        const mobileMenuBtn 
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -734,7 +734,7 @@
             <div class="footer-section">
                 <h4>Contact Us</h4>
                 <a href="tel:+18885240250">(888) 524-0250</a>
-                <a href="/cdn-cgi/l/email-protection#04777174746b767044697d616a6176637d74766b726d6061762a676b69"><span class="__cf_email__" data-cfemail="5724222727382523173a2e32393225302e272538213e3332257934383a">[email&#160;protected]</span></a>
+                <a href="mailto:support@myenergyprovider.com">support@myenergyprovider.com</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -757,7 +757,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Modal functionality with session storage (Google Ads compliant)
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
@@ -776,4 +776,16 @@
         // Close modal when clicking outside
         document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === this) {
-                cl
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

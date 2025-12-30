@@ -595,7 +595,7 @@
             <div class="footer-section">
                 <h4>Contact Us</h4>
                 <a href="tel:+18885240250">(888) 524-0250</a>
-                <a href="/cdn-cgi/l/email-protection#e3909693938c9197a38e9a868d8691849a93918c958a878691cd808c8e"><span class="__cf_email__" data-cfemail="25565055554a575165485c404b4057425c55574a534c4140570b464a48">[email&#160;protected]</span></a>
+                <a href="mailto:support@myenergyprovider.com">support@myenergyprovider.com</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -617,7 +617,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             sessionStorage.setItem('modalDismissed', 'true');
@@ -632,4 +632,16 @@
         });
 
         document.getElementById('modal').addEventListener('click', function(e) {
-            if (
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

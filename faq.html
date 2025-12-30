@@ -3,324 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Frequently asked questions about MyEnergyProvider's phone-based energy bill payment services.">
-    <title>FAQ - MyEnergyProvider</title>
+    <title>FAQ | MyEnergyProvider.com</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 15px; overflow: hidden; transition: all 0.3s; }
+        .faq-item:hover { border-color: var(--primary); }
+        .faq-question { padding: 25px 30px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.1rem; }
+        .faq-question svg { width: 24px; height: 24px; color: var(--primary); transition: transform 0.3s; }
+        .faq-item.active .faq-question svg { transform: rotate(45deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+        .faq-answer p { padding: 0 30px 25px; color: var(--text-secondary); line-height: 1.8; }
+        .faq-item.active .faq-answer { max-height: 300px; }
+    </style>
 </head>
 <body>
-    <div class="animated-bg">
-        <div class="energy-grid"></div>
-        <div class="floating-particles" id="particles"></div>
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
+    <div id="particles" class="particles"></div>
+    <div class="grid-overlay"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>MyEnergyProvider</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="providers.html">Providers</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="faq.html" class="active">FAQ</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <a href="tel:+18885240250" class="nav-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call Now</a>
+        <div class="hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></div>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="index.html">Home</a><a href="providers.html">Providers</a><a href="services.html">Services</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
+        <a href="tel:+18885240250" class="mobile-nav-cta">📞 (888) 524-0250</a>
     </div>
 
-    <div class="modal-overlay" id="callModal">
-        <div class="modal-container">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <div class="modal-content">
-                <div class="modal-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                </div>
-                <h2 class="modal-title">Pay Your Bill Now!</h2>
-                <p class="modal-subtitle">Quick & Hassle-Free Over The Phone</p>
-                <a href="tel:+18885240250" class="modal-cta pulse-animation">
-                    <span class="phone-icon">📞</span>
-                    Call (888) 524-0250
-                </a>
-                <p class="modal-note">Available 24/7 • All Major Providers • Secure Payment</p>
-            </div>
-        </div>
-    </div>
-
-    <header class="header" id="header">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="18" stroke="url(#logoGrad)" stroke-width="2"/>
-                        <path d="M20 8L24 18H16L20 8Z" fill="url(#logoGrad)"/>
-                        <path d="M16 18L20 32L24 18" fill="url(#logoGrad)" opacity="0.7"/>
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00D4AA"/>
-                                <stop offset="100%" stop-color="#00A3FF"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-                <span class="logo-text">MyEnergy<span class="highlight">Provider</span></span>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="services.html" class="nav-link">Services</a>
-                <a href="providers.html" class="nav-link">Providers</a>
-                <a href="faq.html" class="nav-link active">FAQ</a>
-                <a href="contact.html" class="nav-link">Contact</a>
-            </nav>
-            <a href="tel:+18885240250" class="header-cta">
-                <span>📞</span> (888) 524-0250
-            </a>
-            <button class="mobile-menu" id="mobileMenu">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </header>
-
-    <section class="page-header">
-        <div class="container">
-            <div class="breadcrumb animate-fade-in">
-                <a href="index.html">Home</a>
-                <span>›</span>
-                <span>FAQ</span>
-            </div>
-            <h1 class="page-title animate-slide-up">Frequently Asked <span class="gradient-text">Questions</span></h1>
-            <p class="page-subtitle animate-slide-up delay-1">Find answers to common questions about our services.</p>
-        </div>
+    <section class="hero" style="min-height:auto;padding:160px 20px 80px;">
+        <div class="hero-content"><h1>Frequently Asked <span>Questions</span></h1></div>
     </section>
 
-    <section class="content-section">
-        <div class="container">
-            <div class="faq-container">
-                <div class="faq-item animate-fade-in">
-                    <button class="faq-question">
-                        How does MyEnergyProvider work?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Simply call our toll-free number (888) 524-0250, provide your energy provider name and account number, tell us the payment amount, and share your payment method. Our specialists handle everything else, and you receive instant confirmation. The entire process typically takes less than 3 minutes.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-1">
-                    <button class="faq-question">
-                        Which energy providers do you support?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            We support payments to 15+ major energy providers across all 50 states, including Duke Energy, Pacific Gas & Electric, Southern California Edison, Florida Power & Light, Dominion Energy, Consolidated Edison, Xcel Energy, and many more. Visit our Providers page for the complete list.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-2">
-                    <button class="faq-question">
-                        Is my payment information secure?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Absolutely. We use bank-level 256-bit encryption for all transactions. Our payment system is PCI-DSS compliant, meaning we meet the highest security standards in the payment industry. Your financial information is never stored after your payment is processed.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-3">
-                    <button class="faq-question">
-                        What payment methods do you accept?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            We accept all major credit cards (Visa, Mastercard, American Express, Discover), debit cards from all major banks, bank account transfers (ACH), and prepaid debit cards. Choose the method that works best for you.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in">
-                    <button class="faq-question">
-                        How long does payment processing take?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Payments are processed immediately during the call. You'll receive instant confirmation via email or text message. The payment typically posts to your energy provider's account within 1-2 business days, depending on the provider.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-1">
-                    <button class="faq-question">
-                        Is there a fee for using your service?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            A small convenience fee may apply to cover payment processing costs. Our specialists will clearly inform you of any applicable fees before processing your payment. There are no hidden charges, and you always have the opportunity to confirm before completing the transaction.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-2">
-                    <button class="faq-question">
-                        What hours are you available?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            We're available 24 hours a day, 7 days a week, 365 days a year. Whether it's early morning, late at night, weekends, or holidays – our payment specialists are always ready to help you.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-3">
-                    <button class="faq-question">
-                        How will I know my payment was successful?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            You'll receive instant confirmation during the call, including a confirmation number. We'll also send a detailed receipt to your email address or phone number (your choice). Keep this confirmation for your records.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in">
-                    <button class="faq-question">
-                        Can I schedule recurring payments?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            Currently, we process one-time payments over the phone. For recurring payment options, we recommend contacting your energy provider directly or using their online autopay services. We're happy to assist you with each individual payment when needed.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item animate-fade-in delay-1">
-                    <button class="faq-question">
-                        What if I need to dispute a payment?
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <div class="faq-answer-content">
-                            If you have any concerns about a payment, please call us immediately at (888) 524-0250 or email support@myenergyprovider.com. Our customer service team will investigate and help resolve any issues promptly. Keep your confirmation number handy when contacting us.
-                        </div>
-                    </div>
-                </div>
+    <section class="section" style="padding-top:20px;">
+        <div style="max-width:800px;margin:0 auto;">
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>How does your service work?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>Simply call (888) 524-0250, provide your energy provider and account information, and our specialist will process your payment securely. You'll receive instant confirmation.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Which energy providers do you support?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>We support over 50 major energy providers including Duke Energy, PG&E, Southern California Edison, FPL, Dominion Energy, Con Edison, Xcel Energy, and many more.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Is my payment information secure?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>Absolutely! We use bank-level 256-bit SSL encryption and are PCI-DSS compliant. Your payment information is never stored and is processed through secure payment networks.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>What payment methods do you accept?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>We accept all major credit cards (Visa, Mastercard, American Express, Discover), debit cards, and ACH bank transfers.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Are you affiliated with energy providers?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>No, MyEnergyProvider is an independent third-party bill payment service. We are NOT affiliated with any energy provider mentioned on this website.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>What are your hours of operation?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>We are available 24 hours a day, 7 days a week, 365 days a year. You can call us anytime to make a payment.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Is there a fee for using your service?</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+                <div class="faq-answer"><p>A small convenience fee may apply. Our representative will inform you of any fees before processing your payment, so there are no surprises.</p></div>
             </div>
         </div>
     </section>
 
     <section class="cta-section">
-        <div class="container">
-            <div class="cta-card animate-scale-in">
-                <div class="cta-content">
-                    <h2 class="cta-title">Still Have Questions?</h2>
-                    <p class="cta-description">Our friendly team is happy to help. Give us a call!</p>
-                    <a href="tel:+18885240250" class="btn btn-white btn-lg pulse-animation">
-                        <span class="btn-icon">📞</span>
-                        Call (888) 524-0250
-                    </a>
-                </div>
-                <div class="cta-visual">
-                    <div class="cta-circle">
-                        <svg viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" stroke="url(#ctaGrad)" stroke-width="2" fill="none"/>
-                            <text x="50" y="55" text-anchor="middle" fill="white" font-size="24">24/7</text>
-                            <defs>
-                                <linearGradient id="ctaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#00D4AA"/>
-                                    <stop offset="100%" stop-color="#00A3FF"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        <div class="cta-box">
+            <h2>Still Have Questions?</h2>
+            <p>Our friendly team is here to help!</p>
+            <a href="tel:+18885240250" class="cta-phone">(888) 524-0250</a>
+            <a href="tel:+18885240250" class="btn btn-primary btn-lg">Call Now</a>
         </div>
     </section>
 
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="logo">
-                        <div class="logo-icon">
-                            <svg viewBox="0 0 40 40" fill="none">
-                                <circle cx="20" cy="20" r="18" stroke="url(#footerLogoGrad)" stroke-width="2"/>
-                                <path d="M20 8L24 18H16L20 8Z" fill="url(#footerLogoGrad)"/>
-                                <path d="M16 18L20 32L24 18" fill="url(#footerLogoGrad)" opacity="0.7"/>
-                                <defs>
-                                    <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#00D4AA"/>
-                                        <stop offset="100%" stop-color="#00A3FF"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        <span class="logo-text">MyEnergy<span class="highlight">Provider</span></span>
-                    </a>
-                    <p class="footer-description">Making energy bill payments simple, secure, and hassle-free.</p>
-                    <div class="footer-contact">
-                        <a href="tel:+18885240250" class="contact-item">📞 (888) 524-0250</a>
-                        <a href="mailto:support@myenergyprovider.com" class="contact-item">✉️ support@myenergyprovider.com</a>
-                    </div>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
-                    <a href="services.html">Services</a>
-                    <a href="providers.html">Providers</a>
-                    <a href="contact.html">Contact</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                    <a href="disclaimer.html">Disclaimer</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Support</h4>
-                    <a href="faq.html">FAQ</a>
-                    <a href="contact.html">Contact Us</a>
-                    <a href="accessibility.html">Accessibility</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 MyEnergyProvider. All rights reserved.</p>
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MyEnergyProvider.com. All rights reserved.</p>
+            <p class="footer-disclaimer">NOT affiliated with any energy provider.</p>
         </div>
     </footer>
 
-    <a href="tel:+18885240250" class="floating-cta pulse-animation">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-        </svg>
-        <span class="floating-text">Call Now</span>
-    </a>
+    <a href="tel:+18885240250" class="floating-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
 
     <script src="script.js"></script>
+    <script>
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            document.querySelectorAll('.faq-item').forEach(i => { if (i !== item) i.classList.remove('active'); });
+            item.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

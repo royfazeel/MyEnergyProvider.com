@@ -1,351 +1,356 @@
-// ========================================
-// MyEnergyProvider - Main JavaScript
-// ========================================
+/* ============================================
+   MyEnergyProvider.com - Enhanced Script
+   Interactive Popups & Animations
+   ============================================ */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components
-    initModal();
-    initHeader();
-    initMobileMenu();
-    initAnimations();
-    initParticles();
-    initCounters();
-    initFAQ();
-});
+const CONFIG = {
+    phoneNumber: '(888) 524-0250',
+    phoneLink: 'tel:+18885240250',
+    popupDelay: 3000,
+    popupRecurDelay: 30000,
+    particleCount: 50
+};
 
-// ========================================
-// Modal Functionality
-// ========================================
-function initModal() {
-    const modal = document.getElementById('callModal');
-    const modalClose = document.getElementById('modalClose');
-    
-    if (!modal) return;
-    
-    // Show modal after 2 seconds
-    setTimeout(() => {
-        openModal();
-    }, 2000);
-    
-    // Close modal on button click
-    if (modalClose) {
-        modalClose.addEventListener('click', closeModal);
+// ============================================
+// Particle Background System
+// ============================================
+function initParticles() {
+    const container = document.getElementById('particles');
+    if (!container) {
+        const particleDiv = document.createElement('div');
+        particleDiv.id = 'particles';
+        particleDiv.className = 'particles';
+        document.body.prepend(particleDiv);
     }
     
-    // Close modal on overlay click
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+    const particles = document.getElementById('particles');
+    particles.innerHTML = '';
     
-    // Close modal on ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-}
-
-function openModal() {
-    const modal = document.getElementById('callModal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    for (let i = 0; i < CONFIG.particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'floating-particle';
+        particle.style.cssText = `
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation-delay: ${Math.random() * 20}s;
+            animation-duration: ${15 + Math.random() * 20}s;
+            opacity: ${0.1 + Math.random() * 0.3};
+            width: ${2 + Math.random() * 4}px;
+            height: ${2 + Math.random() * 4}px;
+        `;
+        particles.appendChild(particle);
     }
 }
 
-function closeModal() {
-    const modal = document.getElementById('callModal');
-    if (modal) {
-        modal.classList.remove('active');
+// ============================================
+// Mobile Navigation
+// ============================================
+function toggleMobileNav() {
+    const mobileNav = document.getElementById('mobileNav');
+    const hamburger = document.querySelector('.hamburger');
+    if (mobileNav) {
+        mobileNav.classList.toggle('active');
+        hamburger?.classList.toggle('active');
+        document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+    }
+}
+
+// ============================================
+// Enhanced Interactive Popup System
+// ============================================
+let popupTimeout = null;
+let isPopupOpen = false;
+let mouseX = 0, mouseY = 0;
+
+function createEnhancedPopup() {
+    const existing = document.getElementById('megaPopup');
+    if (existing) existing.remove();
+
+    const popup = document.createElement('div');
+    popup.id = 'megaPopup';
+    popup.className = 'mega-popup-overlay';
+    popup.innerHTML = `
+        <div class="mega-popup-bg">
+            <div class="mega-popup-orb orb-1"></div>
+            <div class="mega-popup-orb orb-2"></div>
+            <div class="mega-popup-orb orb-3"></div>
+            <div class="mega-popup-grid"></div>
+        </div>
+        
+        <div class="mega-popup-container">
+            <button class="mega-popup-close" onclick="closePopup()">
+                <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            </button>
+            
+            <div class="mega-popup-spotlight" id="popupSpotlight"></div>
+            
+            <div class="mega-popup-content">
+                <div class="mega-popup-header">
+                    <div class="mega-popup-live-badge">
+                        <span class="live-dot"></span>
+                        <span class="live-text">LIVE</span>
+                        <span class="live-agents">Agents Available Now</span>
+                    </div>
+                </div>
+                
+                <div class="mega-popup-icon-section">
+                    <div class="mega-icon-container">
+                        <div class="mega-icon-pulse"></div>
+                        <div class="mega-icon-pulse delay-1"></div>
+                        <div class="mega-icon-pulse delay-2"></div>
+                        <div class="mega-icon-inner">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="mega-popup-title">
+                    <span class="title-word" style="--i:0">Pay</span>
+                    <span class="title-word" style="--i:1">Your</span>
+                    <span class="title-word" style="--i:2">Bill</span>
+                    <span class="title-word highlight" style="--i:3">Now!</span>
+                </h2>
+                
+                <p class="mega-popup-subtitle">Talk to a real person. No robots. No waiting.</p>
+                
+                <a href="${CONFIG.phoneLink}" class="mega-popup-cta" id="popupCTA">
+                    <div class="cta-bg"></div>
+                    <div class="cta-content">
+                        <div class="cta-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <div class="cta-text">
+                            <span class="cta-label">Call Now - Free</span>
+                            <span class="cta-number">${CONFIG.phoneNumber}</span>
+                        </div>
+                        <div class="cta-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cta-shine"></div>
+                </a>
+                
+                <div class="mega-popup-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <span>24/7 Available</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <span>100% Secure</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+                            </svg>
+                        </div>
+                        <span>Instant Confirm</span>
+                    </div>
+                </div>
+                
+                <div class="mega-popup-stats">
+                    <div class="stat-item">
+                        <span class="stat-num" data-target="100000">0</span>
+                        <span class="stat-label">Happy Customers</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num" data-target="50">0</span>
+                        <span class="stat-label">Energy Providers</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num" data-target="2">0</span>
+                        <span class="stat-label">Min Avg Call</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mega-popup-footer">
+                <span>We are NOT affiliated with any energy provider</span>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    // Spotlight effect following mouse
+    const spotlight = document.getElementById('popupSpotlight');
+    const container = popup.querySelector('.mega-popup-container');
+    
+    container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotlight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 212, 255, 0.15) 0%, transparent 50%)`;
+    });
+    
+    // Close on overlay click
+    popup.addEventListener('click', (e) => {
+        if (e.target === popup) closePopup();
+    });
+    
+    return popup;
+}
+
+function animateStats() {
+    document.querySelectorAll('.stat-num').forEach(stat => {
+        const target = parseInt(stat.dataset.target);
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                clearInterval(timer);
+                current = target;
+            }
+            if (target >= 1000) {
+                stat.textContent = Math.floor(current).toLocaleString() + '+';
+            } else {
+                stat.textContent = Math.floor(current);
+            }
+        }, 30);
+    });
+}
+
+function showPopup() {
+    if (isPopupOpen) return;
+    
+    const popup = createEnhancedPopup();
+    isPopupOpen = true;
+    document.body.style.overflow = 'hidden';
+    
+    requestAnimationFrame(() => {
+        popup.classList.add('active');
+        setTimeout(animateStats, 500);
+    });
+}
+
+function closePopup() {
+    const popup = document.getElementById('megaPopup');
+    if (popup) {
+        popup.classList.remove('active');
+        popup.classList.add('closing');
+        isPopupOpen = false;
         document.body.style.overflow = '';
         
-        // Show modal again on next page visit (stored in session)
-        sessionStorage.setItem('modalShown', 'true');
+        setTimeout(() => popup.remove(), 500);
+        
+        // Recurring popup
+        if (popupTimeout) clearTimeout(popupTimeout);
+        popupTimeout = setTimeout(showPopup, CONFIG.popupRecurDelay);
     }
 }
 
-// ========================================
-// Header Scroll Effect
-// ========================================
-function initHeader() {
-    const header = document.getElementById('header');
-    if (!header) return;
-    
-    let lastScroll = 0;
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        
-        if (currentScroll > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-        
-        lastScroll = currentScroll;
+function initPopup() {
+    setTimeout(showPopup, CONFIG.popupDelay);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isPopupOpen) closePopup();
     });
 }
 
-// ========================================
-// Mobile Menu
-// ========================================
-function initMobileMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    const nav = document.getElementById('nav');
-    
-    if (!mobileMenu || !nav) return;
-    
-    mobileMenu.addEventListener('click', () => {
-        nav.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-    });
-    
-    // Close menu when clicking a link
-    const navLinks = nav.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            nav.classList.remove('active');
-            mobileMenu.classList.remove('active');
-        });
-    });
-}
-
-// ========================================
+// ============================================
 // Scroll Animations
-// ========================================
-function initAnimations() {
-    const animatedElements = document.querySelectorAll('.animate-fade-in, .animate-slide-up, .animate-scale-in');
-    
+// ============================================
+function initScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
-                observer.unobserve(entry.target);
+                entry.target.classList.add('visible');
             }
         });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    animatedElements.forEach(el => {
-        el.style.animationPlayState = 'paused';
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-on-scroll, .stat-card, .area-card, .step-card, .provider-card').forEach(el => {
+        el.classList.add('scroll-animate');
         observer.observe(el);
     });
 }
 
-// ========================================
-// Floating Particles
-// ========================================
-function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
-    
-    const particleCount = 30;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-        particlesContainer.appendChild(particle);
-    }
-}
-
-// ========================================
-// Counter Animation
-// ========================================
-function initCounters() {
-    const counters = document.querySelectorAll('[data-count]');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                observer.unobserve(entry.target);
-            }
+// ============================================
+// Tilt Effect on Cards
+// ============================================
+function initTiltEffect() {
+    document.querySelectorAll('.stat-card, .step-card, .area-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
         });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => observer.observe(counter));
-}
-
-function animateCounter(element) {
-    const target = parseInt(element.getAttribute('data-count'));
-    const duration = 2000;
-    const step = target / (duration / 16);
-    let current = 0;
-    
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current);
-        }
-    }, 16);
-}
-
-// ========================================
-// FAQ Accordion
-// ========================================
-function initFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        if (question) {
-            question.addEventListener('click', () => {
-                const isActive = item.classList.contains('active');
-                
-                // Close all other items
-                faqItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
-                
-                // Toggle current item
-                if (!isActive) {
-                    item.classList.add('active');
-                }
-            });
-        }
-    });
-}
-
-// ========================================
-// Smooth Scroll for Anchor Links
-// ========================================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href !== '#') {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-    });
-});
-
-// ========================================
-// Form Validation
-// ========================================
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
         
-        const name = form.querySelector('[name="name"]').value.trim();
-        const email = form.querySelector('[name="email"]').value.trim();
-        const message = form.querySelector('[name="message"]').value.trim();
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+}
+
+// ============================================
+// Magnetic Button Effect
+// ============================================
+function initMagneticButtons() {
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+        });
         
-        if (!name || !email || !message) {
-            alert('Please fill in all required fields.');
-            return;
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
+// ============================================
+// Typing Effect
+// ============================================
+function typeWriter(element, text, speed = 50) {
+    let i = 0;
+    element.textContent = '';
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
         }
-        
-        if (!isValidEmail(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-        
-        // Show success message
-        alert('Thank you for your message! We will get back to you shortly.');
-        form.reset();
-    });
-}
-
-function isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
-
-// ========================================
-// Phone Number Click Tracking
-// ========================================
-document.querySelectorAll('a[href^="tel:"]').forEach(link => {
-    link.addEventListener('click', function() {
-        // Track phone call clicks (can be integrated with analytics)
-        console.log('Phone call initiated');
-    });
-});
-
-// ========================================
-// Loading Animation
-// ========================================
-window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-});
-
-// ========================================
-// Back to Top Button (if needed)
-// ========================================
-function initBackToTop() {
-    const backToTop = document.getElementById('backToTop');
-    if (!backToTop) return;
-    
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 500) {
-            backToTop.classList.add('visible');
-        } else {
-            backToTop.classList.remove('visible');
-        }
-    });
-    
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// ========================================
-// Typing Effect for Headlines (optional)
-// ========================================
-function initTypingEffect() {
-    const typingElements = document.querySelectorAll('.typing-effect');
-    
-    typingElements.forEach(element => {
-        const text = element.textContent;
-        element.textContent = '';
-        let i = 0;
-        
-        const type = () => {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, 50);
-            }
-        };
-        
-        type();
-    });
-}
-
-// ========================================
-// Provider Page Modal (Shows on new page visits)
-// ========================================
-function showProviderModal() {
-    // Check if this is a provider page and modal hasn't been shown this session
-    const isProviderPage = document.body.classList.contains('provider-page');
-    const modalShown = sessionStorage.getItem('providerModalShown');
-    
-    if (isProviderPage && !modalShown) {
-        setTimeout(() => {
-            openModal();
-            sessionStorage.setItem('providerModalShown', 'true');
-        }, 1500);
     }
+    type();
 }
 
-// Call on page load
-showProviderModal();
+// ============================================
+// Initialize
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    initParticles();
+    initPopup();
+    initScrollAnimations();
+    initTiltEffect();
+    initMagneticButtons();
+});
+
+// Global functions
+window.toggleMobileNav = toggleMobileNav;
+window.closePopup = closePopup;
+window.showPopup = showPopup;
